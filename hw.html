@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link type="text/css" href="csshake.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="./all.css">
+  <title>Popeye</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <img class="img" src="./卜派4.png" alt="">
+    <div class="font">
+      <p class="animate__animated animate__pulse animate__infinite	 ">I'm Popeye</p>
+      <p class="animate__animated animate__pulse animate__infinite	">the Sailor Man</p>
+    </div>
+    <div class="circle">GO</div>
+    <div id="game">
+      <div class="question"></div>
+      <div class="answer"></div>
+    </div>
+  </div>
+  <script src="./jquery-3.6.0.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    for (let i = 0; i < 10; i++) {
+      $('.question').append(`
+        <div class="top-card">
+          <div class="top-card-front"></div>
+        </div>`)
+    }
+
+    for (let i = 0; i < 10; i++) {
+      $('.top-card').eq(i).find('.top-card-front').css('background', `url(./pic/${i + 1}.jpg)`)
+      $('.top-card').eq(i).attr('data-card', i + 1)
+
+      const target = Math.round(Math.random() * 10)
+      $('.top-card').eq(target).insertAfter($('.top-card').eq(i))
+    }
+
+
+
+
+    for (let i = 0; i < 10; i++) {
+      $('.answer').append(`
+       <div class="card">
+          <div class="card-front"></div>
+           <div class="card-back"></div>
+        </div>`)
+    }
+
+    for (let i = 0; i < 10; i++) {
+      $('.card').eq(i).find('.card-front').css('background-image', `url(./w/${i + 1}.jpg)`)
+      $('.card').eq(i).attr('data-card', i + 1)
+
+      const target2 = Math.round(Math.random() * 10)
+      $('.card').eq(target2).insertAfter($('.card').eq(i))
+    }
+
+
+    $(document).ready(function () {
+      $('.top-card').hide()
+      $('.card').hide()
+    })
+
+
+    $('.circle').click(function () {
+      $('.font').hide()
+      $('.circle').hide()
+      $('.top-card').eq(open).slideDown()
+      $('.card').fadeIn(2000)
+    })
+
+
+    let open = 0
+
+    $('#game').on('click', '.card', function () {
+      if ($('.card-open').length < 1 && !$(this).hasClass('card-open')) {
+        $(this).addClass('card-open')
+      }
+
+      if ($('.card-open').eq(0).attr('data-card') === $('.top-card').eq(open).attr('data-card')) {
+        $('.card-open').addClass('card-ok')
+        $('.top-card').eq(open).addClass('card-ok').fadeTo(2000, 0)
+        setTimeout(() => {
+          $('.top-card').hide()
+          if (open < 9) {
+            open++
+            $('.top-card').eq(open).slideDown()
+          }
+        }, 2000);
+        // 將 card-front 淡出而不是 .card 因為對 card 淡出會把3d壓平
+        $('.card-open .card-front').fadeTo(3000, 0)
+      }
+
+
+      setTimeout(() => {
+
+        // 如果 .card-open 裡的 card-front 透明度不是1(表示翻對了)，把 .card-open 透明的設為0
+        // .each() 類似 for of 裡面的 $(this) 代表迴圈正在跑的元素
+        $('.card-open').each(function () {
+          if ($(this).find('.card-front').css('opacity') != 1) {
+            $(this).css('opacity', 0)
+          }
+        })
+
+        $('.card-open').removeClass('card-open')
+        if ($('.card-ok').length === 20) {
+          Swal.fire({
+            title: '每日五蔬果 病痛遠離你'
+          })
+        }
+      }, 1000)
+    })
+
+
+    setTimeout(() => {
+
+      // 如果 .card-open 裡的 card-front 透明度不是1(表示翻對了)，把 .card-open 透明的設為0
+      // .each() 類似 for of 裡面的 $(this) 代表迴圈正在跑的元素
+      $('.card-open').each(function () {
+        if ($(this).find('.card-front').css('opacity') != 1) {
+          $(this).css('opacity', 0)
+        }
+      })
+
+      $('.card-open').removeClass('card-open')
+      if ($('.card-ok').length === 20) {
+        Swal.fire({
+          title: '恭喜過關'
+        })
+      }
+    }, 1000)
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>
